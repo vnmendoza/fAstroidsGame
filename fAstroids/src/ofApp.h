@@ -20,5 +20,10 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+		//General
+		enum GameState { Title, Play, End };
+		GameState gs;
+
 		
 };

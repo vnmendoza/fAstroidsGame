@@ -1,5 +1,6 @@
 #include "Agent.h"
 
+
 Agent::Agent()
 {
 	width = 10;
@@ -8,6 +9,16 @@ Agent::Agent()
 	nEnergy = 5;
 }
 
+void Agent::update()
+{
+	move();
+	//weapon.fire();
+}
+
+void Agent::move()
+{
+
+}
 
 void Agent::setShapeColor(ofColor c)
 {
@@ -130,6 +141,7 @@ void Hero::update()
 	//agentCollisions();
 }
 
+
 void Hero::wallCollisions()
 {
 	if (pos.x > ofGetWidth() - width) {
@@ -218,7 +230,7 @@ void Hero::move()
 }
 
 
-//~~~~~~~~~~~~~~ENEMY~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~ENEMY~~~~~~~~~~~~~~~~~~
 
 
 Enemy::Enemy()
@@ -252,4 +264,60 @@ void Enemy::setup(int shapeSize, int numSides)
 	pos = glm::vec3(ofRandom(width, ofGetWindowWidth() - width), ofRandom(width, ofGetWindowHeight() - width), 0);
 }
 
+void Enemy::move()
+{
+
+}
+
+//~~~~~~~~~~~~~~~~~~Triangle~~~~~~~~~~~~~~~~~~~~
+
+Triangle::Triangle() {}
+
+void Triangle::move()
+{
+
+}
+
+void Triangle::move(glm::vec3 heroPos)
+{
+
+	direction = pos - heroPos;
+	//normalize
+	direction = glm::normalize(direction);
+	//multiply by speed
+	direction *= -speed;
+	//add to position
+	pos += direction;
+
+}
+
+void Triangle::update(glm::vec3 mousePos)
+{
+	move(mousePos);
+	//rotation
+	//cout << glm::degrees(glm::orientedAngle(heading(), direction, glm::vec3(0, 0, 1)))<<endl;
+	ofSetColor(ofColor::gray);
+	drawHeading();
+	float deg = glm::degrees(glm::orientedAngle(glm::vec3(0, 1, 0), glm::normalize(direction), glm::vec3(0, 0, 1)));
+	//the 30 is for a weird offset.
+	rotation = deg - 30;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~Pentagon~~~~~~~~~~~~~~~~~~
+
+Pentagon::Pentagon() {
+	//lastShotTime = ofGetElapsedTimef();
+	//fireRate = 3;
+	//weapon = 
+}
+
+void Pentagon::update()
+{
+
+}
+
+void Pentagon::move()
+{
+	//stationary
+}
 

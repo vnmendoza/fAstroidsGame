@@ -1,5 +1,7 @@
 #pragma once
 #include "ofMain.h"
+#include "Weapon.h"
+
 
 class Agent
 {
@@ -11,6 +13,7 @@ protected:
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
+	//Weapon weapon;
 public:
 	Agent();
 	int getSpeed();
@@ -27,6 +30,8 @@ public:
 	ofColor getColor();
 	void setup(ofImage* mySprite);
 	void draw();
+	void update();
+	void move();
 };
 
 class Hero : public Agent
@@ -62,12 +67,33 @@ public:
 	void setLifespan(float lspn);
 	void setup(int shapeSize, int numSides);
 	void update();
+	virtual void move();
 	float getBirthday();
 	float getLifespan();
 };
 
 
+class Triangle : public Enemy
+{
+private:
+public:
+	Triangle();
+	void move();
+	void move(glm::vec3);
+	void update(glm::vec3 heroPosition);
+};
 
+//~~~~~~~~~Pentagon
+
+class Pentagon : public Enemy
+{
+private:
+
+public:
+	Pentagon();
+	void move();
+	void update();
+};
 
 
 

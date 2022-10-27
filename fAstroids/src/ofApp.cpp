@@ -9,14 +9,19 @@ void ofApp::setup(){
 
 	//set global variables
 	center = glm::vec3(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 0);
+	bgImg.load("background.png");
+	shapeDegRot = 45;
+	shapeSize = 40;
 
-
-	//GUI
-	//Hero Sliders
+	//Hero
+	heroImg.load("Hero_ship.png");
+	hero.setup(&heroImg);
+		//Hero Sliders
 	heroGroup.setName("Hero");
 	heroGroup.add(heroSpeedSlider.set("Hero Speed", 9, 0, 50));
 	heroGroup.add(heroRotationSpeedSlider.set("Hero Rotation Speed", 5, 0, 10));
 	heroGroup.add(heroSizeSlider.set("Hero Size", 0.75, 0, 3));
+	heroGroup.add(hRetroRSlider.set("RetroRockets",true));
 	gui.setup(heroGroup);
 	//EnemySliders
 	enemyGroup.setName("Enemies");
@@ -27,7 +32,6 @@ void ofApp::setup(){
 	enemyGroup.add(eFireRate.set("Enemy FireRate", 3, 0.5, 10));
 	//General Sliders
 	mainGroup.add(levelSlider.set("Level", 1, 1, 3));
-	gui.add(spriteToggle.setup("Show Sprite", true));
 	//Add to gui
 	mainGroup.add(heroGroup);
 	mainGroup.add(enemyGroup);
@@ -47,6 +51,15 @@ void ofApp::setup(){
 	gameOverWidth = myFont.stringWidth(gameOver);
 }
 
+void ofApp::updateFromGui()
+{
+	hero.setSpeed(heroSpeedSlider);
+	hero.setRotationSpeed(heroRotationSpeedSlider);
+	hero.setSize(heroSizeSlider);
+	hero.setRetroRocket(hRetroRSlider);
+	lc.update(eSpawnRate, eSpawnAmnt,levelSlider);
+}
+
 //--------------------------------------------------------------
 void ofApp::update(){
 	switch (gs)
@@ -55,6 +68,8 @@ void ofApp::update(){
 		rotation++;
 		break;
 	case Play:
+		updateFromGui();
+		hero.update();
 		break;
 	case End:
 		break;
@@ -64,6 +79,7 @@ void ofApp::update(){
 
 }
 
+
 //--------------------------------------------------------------
 void ofApp::draw(){
 	switch (gs)
@@ -72,6 +88,8 @@ void ofApp::draw(){
 		drawStart();
 		break;
 	case Play:
+		gui.draw();
+		hero.draw();
 		break;
 	case End:
 		break;
@@ -181,7 +199,6 @@ void ofApp::keyPressed(int key){
 		if (key == ' ') {
 			cout << "space" << endl;
 		}
-		
 		if (key == 'h' || key == 'H')
 		{
 			bHide = !bHide;
@@ -210,6 +227,22 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 
+	if (key == OF_KEY_UP || key == 'w') {
+		hero.setUpPressed(false);
+	}
+	if (key == OF_KEY_LEFT || key == 'a') {
+		hero.setLeftPressed(false);
+	}
+	if (key == OF_KEY_DOWN || key == 's') {
+		hero.setDownPressed(false);
+	}
+	if (key == OF_KEY_RIGHT || key == 'd') {
+		hero.setRightPressed(false);
+	}
+	if (key == 'f')
+	{
+		ofToggleFullscreen();
+	}
 }
 
 //--------------------------------------------------------------

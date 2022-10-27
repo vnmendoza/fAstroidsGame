@@ -2,18 +2,19 @@
 #include "ofMain.h"
 #include "Weapon.h"
 
-
 class Agent
 {
 protected:
-	glm::vec3 pos, vel;
+	glm::vec3 pos, velocity, acceleration,force;
+	float mass, damping, angularForce, angularVelocity, angularAcceleration;
+	bool thrust,retroRocket;
 	int speed, nEnergy;
 	ofColor color;
 	float width, rotation;
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
-	//Weapon weapon;
+	Weapon weapon;
 public:
 	Agent();
 	int getSpeed();
@@ -32,6 +33,10 @@ public:
 	void draw();
 	void update();
 	void move();
+	void retrograde();
+	void setRetroRocket(bool rr);
+	bool getRetroRocket();
+
 };
 
 class Hero : public Agent
@@ -53,7 +58,7 @@ public:
 	int getNRG();
 	void setNRG(int energy);
 	void move();
-};
+	};
 
 class Enemy : public Agent
 {

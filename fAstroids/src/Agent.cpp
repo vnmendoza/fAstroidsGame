@@ -4,9 +4,14 @@
 Agent::Agent()
 {
 	width = 10;
-	speed = 10;
+	speed = 40;
 	rotation = 0;
 	nEnergy = 5;
+	mass = 1.0;
+	damping = 0.98;
+	angularForce ,angularAcceleration,angularVelocity= 0;
+	velocity, acceleration, force = glm::vec3(0);
+	retroRocket = true;
 }
 
 void Agent::update()
@@ -17,9 +22,37 @@ void Agent::update()
 
 void Agent::move()
 {
+	float framerate = ofGetFrameRate();
+	float dt = 1.0 / framerate;
 
+	pos += (velocity * dt);
+	glm::vec3 accel = acceleration;
+	velocity += accel * dt;
+
+	rotation += (angularVelocity * dt);
+	float a = angularAcceleration;
+	a += (angularForce * 1.0 / mass);
+	angularVelocity += a * dt;
+
+	if (retroRocket)
+		retrograde();
 }
 
+void Agent::retrograde()
+{
+	velocity *= damping;
+	angularVelocity *= damping;
+}
+
+void Agent::setRetroRocket(bool rr)
+{
+	retroRocket = rr;
+}
+
+bool Agent::getRetroRocket()
+{
+	return retroRocket;
+}
 void Agent::setShapeColor(ofColor c)
 {
 	color = c;
@@ -120,6 +153,9 @@ Hero::Hero() : Agent()
 	width = 5;
 	speed = 5;
 	nEnergy = 5;
+	pos = glm::vec3(ofGetWidth() / 2, ofGetHeight() / 2, 0);
+	rotation = 0;
+	rotSpeed = 10;
 	is_up_pressed = false;
 	is_left_pressed = false;
 	is_down_pressed = false;
@@ -210,24 +246,24 @@ void Hero::move()
 	if (is_up_pressed)
 	{
 		//activate fwd thruster
-		vel = speed * heading();
-		pos += vel;
+		velocity += speed * heading();
 	}
 	if (is_left_pressed)
 	{
 		//activate lft thruster
-		rotation -= rotSpeed;
+		angularVelocity -= rotSpeed;
 	}
 	if (is_down_pressed)
 	{
-		vel = speed * heading();
-		pos -= vel;
+		velocity -= speed * heading();
 	}
 	if (is_right_pressed)
 	{
-		rotation += rotSpeed;
+		angularVelocity += rotSpeed;
 	}
+	Agent::move();
 }
+
 
 
 //~~~~~~~~~~~~~~~~~ENEMY~~~~~~~~~~~~~~~~~~
@@ -287,7 +323,8 @@ void Triangle::move(glm::vec3 heroPos)
 	//multiply by speed
 	direction *= -speed;
 	//add to position
-	pos += direction;
+	//pos += direction;
+	velocity += direction;
 
 }
 

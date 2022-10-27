@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "Agent.h"
+#include "LevelController.h"
 #include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
@@ -24,6 +25,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		//Custom functions
+		void updateFromGui();
 		void spawnEnemies();
 		void drawElapsedTime();
 		void drawStart();
@@ -39,12 +41,12 @@ class ofApp : public ofBaseApp{
 		int rotation, enterWidth, instWidth, gameOverWidth,
 			instHeight, circum, shapeDegRot, shapeSize;
 		string instructions, enter, gameOver;
+		LevelController lc;
 
 
 		ofxPanel gui;
 		ofxLabel label;
 		ofxButton button;
-		ofxToggle spriteToggle;
 		ofParameterGroup mainGroup;
 		ofParameter<int> levelSlider;
 		//Hero
@@ -53,6 +55,7 @@ class ofApp : public ofBaseApp{
 		ofImage heroImg, hBulletImg;
 		ofParameterGroup heroGroup;
 		ofParameter<int> heroSpeedSlider;
+		ofParameter<bool> hRetroRSlider;
 		ofParameter<float> heroRotationSpeedSlider, heroSizeSlider;
 		ofParameter<int> bulletSpeedSlider;
 		vector<PlayerBullet> playerBullets;
@@ -62,8 +65,8 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup enemyGroup;
 		ofParameter<int> enemySpeedSlider, eSpawnAmnt;
 		ofParameter<float> eSpawnRate, eLifespan, eFireRate;
+		vector<Enemy> enemies;
 		vector<Triangle> triangles;
 		vector<Pentagon> pentagons;
-		vector<Enemy> enemies;
 		vector<EnemyBullet> enemyBullets;
 };

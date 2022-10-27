@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-#include "Agent.h"
 
 class Bullet
 {

@@ -271,6 +271,7 @@ void Hero::move()
 
 Enemy::Enemy()
 {
+	heroPos = glm::vec3(0);
 	sides = 3;
 	width = 70;
 	lifespan = 5;
@@ -280,6 +281,11 @@ Enemy::Enemy()
 float Enemy::getBirthday()
 {
 	return birthday;
+}
+
+void Enemy::setHeroPos(glm::vec3 hp)
+{
+	heroPos = hp;
 }
 
 float Enemy::getLifespan()
@@ -292,6 +298,11 @@ void Enemy::setLifespan(float lspn)
 	lifespan = lspn;
 }
 
+void Enemy::setFireRate(float fr)
+{
+	//TODO: Create firerate that goes to weapon
+}
+
 void Enemy::setup(int shapeSize, int numSides)
 {
 	width = shapeSize;
@@ -299,24 +310,25 @@ void Enemy::setup(int shapeSize, int numSides)
 	rotation = ofRandom(0, 360);
 	pos = glm::vec3(ofRandom(width, ofGetWindowWidth() - width), ofRandom(width, ofGetWindowHeight() - width), 0);
 }
-
 void Enemy::move()
 {
-
+	cout << "from Enemy\n";
+}
+void Enemy::draw()
+{
+	ofPopMatrix();
+	ofSetCircleResolution(sides);
+	ofDrawCircle(pos,width);
+	ofPushMatrix();
 }
 
 //~~~~~~~~~~~~~~~~~~Triangle~~~~~~~~~~~~~~~~~~~~
 
-Triangle::Triangle() {}
+Triangle::Triangle() {
+}
 
 void Triangle::move()
 {
-
-}
-
-void Triangle::move(glm::vec3 heroPos)
-{
-
 	direction = pos - heroPos;
 	//normalize
 	direction = glm::normalize(direction);
@@ -325,36 +337,50 @@ void Triangle::move(glm::vec3 heroPos)
 	//add to position
 	//pos += direction;
 	velocity += direction;
-
+	Agent::move();
 }
 
-void Triangle::update(glm::vec3 mousePos)
+void Triangle::move(glm::vec3 hp)
 {
-	move(mousePos);
-	//rotation
-	//cout << glm::degrees(glm::orientedAngle(heading(), direction, glm::vec3(0, 0, 1)))<<endl;
-	ofSetColor(ofColor::gray);
+
+	
+}
+
+void Triangle::update(glm::vec3 heroPos)
+{
+	move(heroPos);
+	//point triangle in correct direction
 	drawHeading();
 	float deg = glm::degrees(glm::orientedAngle(glm::vec3(0, 1, 0), glm::normalize(direction), glm::vec3(0, 0, 1)));
 	//the 30 is for a weird offset.
 	rotation = deg - 30;
 }
 
-//~~~~~~~~~~~~~~~~~~~~~Pentagon~~~~~~~~~~~~~~~~~~
 
-Pentagon::Pentagon() {
+//~~~~~~~~~~~~~~~~~~~~~Square~~~~~~~~~~~~~~~~~~
+
+Square::Square() {
 	//lastShotTime = ofGetElapsedTimef();
 	//fireRate = 3;
 	//weapon = 
 }
 
-void Pentagon::update()
+void Square::update()
 {
 
 }
 
-void Pentagon::move()
+void Square::move()
 {
 	//stationary
 }
 
+//~~~~~~~~~~~~~~~Hexagon~~~~~~~~~~~~~
+Hexagon::Hexagon()
+{
+
+}
+void Hexagon::move()
+{
+
+}

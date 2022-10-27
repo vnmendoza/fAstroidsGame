@@ -5,15 +5,15 @@ class Bullet
 {
 protected:
 	glm::vec3 pos,vel;
-	float speed, rotation;
+	float speed, rotation, accuracy;
 	float imgWidth,imgHeight;
 	float damage;
 	ofImage* img;
+	bool fromPlayer;
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 public:
 	Bullet();
 	void setup(glm::vec3 position,  ofImage* bullet_image);
-	virtual	void update();
 	void draw();
 	glm::vec3 getPos();
 	float getWidth();
@@ -21,26 +21,14 @@ public:
 	void setDamage(float);
 	glm::mat4 getMatrix();
 	void setDirection(glm::vec3 mousePos);
-};
-
-class PlayerBullet : public Bullet
-{
-protected:
-	float accuracy;
-public:
-	PlayerBullet();
 	void move();
 	void update();
 };
 
-class EnemyBullet : public Bullet
+class CannonBullet : public Bullet
 {
-protected: 
+protected:
 public:
-	EnemyBullet();
-
-	void update();
-
+	CannonBullet();
 
 };
-

@@ -23,7 +23,8 @@ void ofApp::setup(){
 	heroGroup.add(heroSizeSlider.set("Hero Size", 0.75, 0, 3));
 	heroGroup.add(hRetroRSlider.set("RetroRockets",true));
 	gui.setup(heroGroup);
-	//EnemySliders
+	//Enemy
+		//EnemySliders
 	enemyGroup.setName("Enemies");
 	enemyGroup.add(enemySpeedSlider.set("Enemy Speed", 5, 0, 50));
 	enemyGroup.add(eSpawnRate.set("Enemy Spawn Rate", 3, 0.5, 15));
@@ -58,6 +59,7 @@ void ofApp::updateFromGui()
 	hero.setSize(heroSizeSlider);
 	hero.setRetroRocket(hRetroRSlider);
 	lc.update(eSpawnRate, eSpawnAmnt,levelSlider);
+	lc.updateEnemies(eLifespan,enemySpeedSlider,eFireRate,hero.getPos());
 }
 
 //--------------------------------------------------------------
@@ -70,6 +72,7 @@ void ofApp::update(){
 	case Play:
 		updateFromGui();
 		hero.update();
+		//LevelController
 		break;
 	case End:
 		break;
@@ -90,6 +93,7 @@ void ofApp::draw(){
 	case Play:
 		gui.draw();
 		hero.draw();
+		lc.drawEnemies();
 		break;
 	case End:
 		break;
@@ -122,7 +126,7 @@ void ofApp::drawStart()
 	ofSetCircleResolution(4);
 	ofDrawCircle(0, 0, shapeSize);
 	ofPopMatrix();
-	//Pentagon
+	//Square
 	ofPushMatrix();
 	ofRotateDeg(shapeDegRot * 2);
 	ofTranslate(circum, 0, 0);
@@ -203,17 +207,22 @@ void ofApp::keyPressed(int key){
 		{
 			bHide = !bHide;
 		}
+		if (key == '1')
+			lc.spawnTriangle();
+		if (key == '2')
+			lc.spawnSquare();
+		if (key == '3')
+			lc.spawnHexagon();
+
+
+
 
 		break;
 	case End:
 		if (key == ' ')
 		{
 			death = false;
-			enemyBullets.clear();
-			playerBullets.clear();
-			pentagons.clear();
-			triangles.clear();
-			hero.setPos(glm::vec3(ofGetWidth() / 2, ofGetHeight() / 2, 0));
+			hero.setPos(center);
 			hero.setNRG(5);
 			gs = Title;
 		}

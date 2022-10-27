@@ -18,17 +18,6 @@ void Bullet::setup(glm::vec3 p, ofImage* bullet_image) {
     imgHeight = img->getHeight();
 }
 
-void Bullet::update() {
-    /*
-    if (from_player) {
-        pos.y -= speed;
-    }
-    else {
-        pos.y += speed;
-    }
-*/
-    cout << "super bullet" << endl;
-}
 void Bullet::draw() {
     ofPushMatrix();
     ofSetColor(ofColor::white);
@@ -66,11 +55,6 @@ glm::mat4 Bullet::getMatrix() {
     return (trans * rot * scale);
 }
 
-// PLAYER BULLET
-PlayerBullet::PlayerBullet() : Bullet()
-{
-    
-}
 void Bullet::setDirection(glm::vec3 mousePos)
 {
     vel = pos - mousePos;
@@ -79,24 +63,14 @@ void Bullet::setDirection(glm::vec3 mousePos)
     rotation = glm::degrees(rotation);
     vel *= -speed;
 }
-void PlayerBullet::move()
+void Bullet::move()
 {
     pos += vel;
 }
-void PlayerBullet::update()
+void Bullet::update()
 {
     move();
-    //enemyCollision()
 }
 
-
-EnemyBullet::EnemyBullet() : Bullet()
-{
-}
-
-void EnemyBullet::update()
-{
-
-}
 
 

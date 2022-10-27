@@ -14,8 +14,8 @@ protected:
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
-	Weapon weapon;
 public:
+	Weapon weapon;
 	Agent();
 	int getSpeed();
 	void setSpeed(int);
@@ -64,9 +64,10 @@ class Enemy : public Agent
 {
 protected:
 	int sides;
-	glm::vec3 direction;
+	glm::vec3 direction,heroPos;
 	float lifespan;
 	float birthday;
+
 public:
 	Enemy();
 	void setLifespan(float lspn);
@@ -75,6 +76,9 @@ public:
 	virtual void move();
 	float getBirthday();
 	float getLifespan();
+	void setHeroPos(glm::vec3 heroPosition);
+	void draw();
+	void setFireRate(float fr);
 };
 
 
@@ -88,17 +92,25 @@ public:
 	void update(glm::vec3 heroPosition);
 };
 
-//~~~~~~~~~Pentagon
+//~~~~~~~~~Square
 
-class Pentagon : public Enemy
+class Square : public Enemy
 {
 private:
 
 public:
-	Pentagon();
+	Square();
 	void move();
 	void update();
 };
 
+class Hexagon : public Enemy
+{
+private:
+public:
+	Hexagon();
+	void move();
+	void update();
+};
 
 

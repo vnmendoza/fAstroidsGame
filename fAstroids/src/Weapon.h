@@ -17,4 +17,5 @@ public:
 	bool shouldShoot();
 	void shoot();
 	void update();
+	void setWeapon(wType type);
 };

@@ -23,8 +23,8 @@ void LevelController::update(float spawn_rate, int spawn_amount)
 {
 	spawnRate = spawn_rate;
 	spawnAmount = spawn_amount;
-	if (shouldSpawn())
-		spawnEnemies();
+	//if (shouldSpawn())
+		//spawnEnemies();
 }
 
 
@@ -76,13 +76,6 @@ void LevelController::setLevel(int lvl)
 {
 	level = lvl;
 }
-
-/*
-void LevelController::setEnemies(vector <Enemy> *nme)
-{
-	enemies = nme;
-}
-*/
 
 void LevelController::spawnEnemies()
 {

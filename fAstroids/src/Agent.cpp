@@ -12,6 +12,7 @@ Agent::Agent()
 	angularForce ,angularAcceleration,angularVelocity= 0;
 	velocity, acceleration, force = glm::vec3(0);
 	retroRocket = true;
+	cout << "agent created\n";
 }
 
 void Agent::update()
@@ -29,8 +30,11 @@ void Agent::move()
 	glm::vec3 accel = acceleration;
 	velocity += accel * dt;
 
+	//cout << "force: " <<  angularForce << endl;
+	//cout << "velocity: " << angularVelocity << endl;
+	//cout << "accel: " << angularAcceleration << endl;
 	rotation += (angularVelocity * dt);
-	float a = angularAcceleration;
+	float a = angularAcceleration = 0;
 	a += (angularForce * 1.0 / mass);
 	angularVelocity += a * dt;
 
@@ -98,8 +102,6 @@ bool Agent::collisionCheck(glm::vec3 objPos, float objWidth)
 	float obj2me = glm::distance(objPos, pos);
 	float imgWidthCompensation = (objWidth + width);
 	return obj2me < imgWidthCompensation;
-
-
 }
 
 float Agent::getWidth()
@@ -116,8 +118,9 @@ glm::vec3 Agent::heading()
 
 void Agent::drawHeading()
 {
-	glm::vec3 triPoint = translate(glm::vec3(0, -120, 0));
-	glm::vec3 center = translate(glm::vec3(0, 0, 0));
+	glm::vec3 triPoint = (glm::vec3(0, -120, 0));
+	glm::vec3 center = (glm::vec3(0, 0, 0));
+
 	ofDrawLine(triPoint, center);
 }
 
@@ -144,6 +147,7 @@ void Agent::draw()
 	ofMultMatrix(getMatrix());
 	sprite->setAnchorPoint(imgWidth / 2, imgHeight / 2);
 	sprite->draw(0, 0, imgWidth, imgHeight);
+	drawHeading();
 	ofPopMatrix();
 }
 
@@ -160,7 +164,6 @@ Hero::Hero() : Agent()
 	is_left_pressed = false;
 	is_down_pressed = false;
 	is_right_pressed = false;
-
 }
 
 
@@ -269,13 +272,14 @@ void Hero::move()
 //~~~~~~~~~~~~~~~~~ENEMY~~~~~~~~~~~~~~~~~~
 
 
-Enemy::Enemy()
+Enemy::Enemy() : Agent()
 {
 	heroPos = glm::vec3(0);
 	sides = 3;
 	width = 70;
 	lifespan = 5;
 	birthday = ofGetElapsedTimef();
+	cout << "enemy created\n";
 }
 
 float Enemy::getBirthday()
@@ -307,7 +311,7 @@ void Enemy::setup(int shapeSize, int numSides)
 {
 	width = shapeSize;
 	sides = numSides;
-	rotation = ofRandom(0, 360);
+	//rotation = ofRandom(0, 360);
 	pos = glm::vec3(ofRandom(width, ofGetWindowWidth() - width), ofRandom(width, ofGetWindowHeight() - width), 0);
 }
 void Enemy::move()
@@ -316,19 +320,31 @@ void Enemy::move()
 }
 void Enemy::draw()
 {
-	ofPopMatrix();
-	ofSetCircleResolution(sides);
-	ofDrawCircle(pos,width);
+
 	ofPushMatrix();
+	ofMultMatrix(getMatrix());
+	//ofTranslate(pos);
+	//ofRotate(rotation);
+	//cout << rotation << endl;
+	//drawHeading();
+	ofSetCircleResolution(sides);
+	ofDrawCircle(0,0,width);
+	ofPopMatrix();
 }
 
 //~~~~~~~~~~~~~~~~~~Triangle~~~~~~~~~~~~~~~~~~~~
 
-Triangle::Triangle() {
+Triangle::Triangle() : Enemy()
+{
+	sides = 3;
+	angularAcceleration, angularVelocity, angularForce = 0;
+	rotation = 0;
+	cout << "triangle created\n";
 }
 
 void Triangle::move()
 {
+	//TODO: FIX ROTATION
 	direction = pos - heroPos;
 	//normalize
 	direction = glm::normalize(direction);
@@ -336,25 +352,32 @@ void Triangle::move()
 	direction *= -speed;
 	//add to position
 	//pos += direction;
+	//velocity = glm::vec3(0);
 	velocity += direction;
+	// get the heading then cross reference that with
+	// the other things the glm)0,1,0) and make it so tahat the 
+	// oriented angle of the heading is the angualre velocity
+	float deg = glm::degrees(glm::orientedAngle(heading(), glm::normalize(direction), glm::vec3(0, 0, 1)));
+	//the 30 is for a weird offset.
+	angularVelocity = deg + 30;
+	//cout << angularVelocity << endl;
 	Agent::move();
 }
 
-void Triangle::move(glm::vec3 hp)
+void Triangle::draw()
 {
-
-	
-}
-
-void Triangle::update(glm::vec3 heroPos)
-{
-	move(heroPos);
-	//point triangle in correct direction
 	drawHeading();
-	float deg = glm::degrees(glm::orientedAngle(glm::vec3(0, 1, 0), glm::normalize(direction), glm::vec3(0, 0, 1)));
-	//the 30 is for a weird offset.
-	rotation = deg - 30;
+	Enemy::draw();
 }
+void Triangle::drawHeading()
+{
+	ofPushMatrix();
+	ofMultMatrix(getMatrix());
+	ofRotate(-30);
+	Agent::drawHeading();
+	ofPopMatrix();
+}
+
 
 
 //~~~~~~~~~~~~~~~~~~~~~Square~~~~~~~~~~~~~~~~~~

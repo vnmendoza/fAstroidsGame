@@ -77,7 +77,7 @@ public:
 	float getBirthday();
 	float getLifespan();
 	void setHeroPos(glm::vec3 heroPosition);
-	void draw();
+	virtual void draw();
 	void setFireRate(float fr);
 };
 
@@ -90,6 +90,9 @@ public:
 	void move();
 	void move(glm::vec3);
 	void update(glm::vec3 heroPosition);
+	void draw();
+	void drawHeading();
+	//glm::vec3 heading();
 };
 
 //~~~~~~~~~Square

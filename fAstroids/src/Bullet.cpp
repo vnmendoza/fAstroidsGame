@@ -18,6 +18,12 @@ void Bullet::setup(glm::vec3 p, ofImage* bullet_image) {
     imgHeight = img->getHeight();
 }
 
+void Bullet::setup(glm::vec3* pPosition, ofImage* pBullet_img)
+{
+    pos = *pPosition;
+    setup(pos, pBullet_img);
+}
+
 void Bullet::draw() {
     ofPushMatrix();
     ofSetColor(ofColor::white);

@@ -100,7 +100,6 @@ public:
 class Square : public Enemy
 {
 private:
-
 public:
 	Square();
 	void move();

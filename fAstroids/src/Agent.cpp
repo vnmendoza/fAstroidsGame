@@ -33,6 +33,7 @@ void Agent::move()
 	//cout << "force: " <<  angularForce << endl;
 	//cout << "velocity: " << angularVelocity << endl;
 	//cout << "accel: " << angularAcceleration << endl;
+	//cout << "pos: " << pos << endl;
 	rotation += (angularVelocity * dt);
 	float a = angularAcceleration = 0;
 	a += (angularForce * 1.0 / mass);
@@ -184,19 +185,24 @@ void Hero::update()
 void Hero::wallCollisions()
 {
 	if (pos.x > ofGetWidth() - width) {
-		pos.x = ofGetWidth() - width;
+
+		pos.x = width;
+		//pos.x = ofGetWidth() - width;
 	}
 
 	if (pos.x < width) {
-		pos.x = width;
+		//pos.x = width;
+		pos.x = ofGetWidth() - width;
 	}
 
 	if (pos.y > ofGetHeight() - width) {
-		pos.y = ofGetHeight() - width;
+		pos.y = width;
+		//pos.y = ofGetHeight() - width;
 	}
 
 	if (pos.y < width) {
-		pos.y = width;
+		//pos.y = width;
+		pos.y = ofGetHeight() - width;
 	}
 
 }
@@ -311,7 +317,7 @@ void Enemy::setup(int shapeSize, int numSides)
 {
 	width = shapeSize;
 	sides = numSides;
-	//rotation = ofRandom(0, 360);
+	rotation = ofRandom(0, 360);
 	pos = glm::vec3(ofRandom(width, ofGetWindowWidth() - width), ofRandom(width, ofGetWindowHeight() - width), 0);
 }
 void Enemy::move()
@@ -323,10 +329,6 @@ void Enemy::draw()
 
 	ofPushMatrix();
 	ofMultMatrix(getMatrix());
-	//ofTranslate(pos);
-	//ofRotate(rotation);
-	//cout << rotation << endl;
-	//drawHeading();
 	ofSetCircleResolution(sides);
 	ofDrawCircle(0,0,width);
 	ofPopMatrix();
@@ -344,7 +346,6 @@ Triangle::Triangle() : Enemy()
 
 void Triangle::move()
 {
-	//TODO: FIX ROTATION
 	direction = pos - heroPos;
 	//normalize
 	direction = glm::normalize(direction);
@@ -354,13 +355,9 @@ void Triangle::move()
 	//pos += direction;
 	//velocity = glm::vec3(0);
 	velocity += direction;
-	// get the heading then cross reference that with
-	// the other things the glm)0,1,0) and make it so tahat the 
-	// oriented angle of the heading is the angualre velocity
 	float deg = glm::degrees(glm::orientedAngle(heading(), glm::normalize(direction), glm::vec3(0, 0, 1)));
 	//the 30 is for a weird offset.
 	angularVelocity = deg + 30;
-	//cout << angularVelocity << endl;
 	Agent::move();
 }
 
@@ -386,16 +383,24 @@ Square::Square() {
 	//lastShotTime = ofGetElapsedTimef();
 	//fireRate = 3;
 	//weapon = 
-}
-
-void Square::update()
-{
-
+	cout << "sqr created\n";
+	weapon.setPos(&pos);
 }
 
 void Square::move()
 {
 	//stationary
+	force, velocity, acceleration = glm::vec3(0);
+
+	//rotation
+	direction = pos - heroPos;
+	//normalize
+	direction = glm::normalize(direction);
+
+	float deg = glm::degrees(glm::orientedAngle(heading(), glm::normalize(direction), glm::vec3(0, 0, 1)));
+	angularVelocity = deg;
+	Agent::move();
+
 }
 
 //~~~~~~~~~~~~~~~Hexagon~~~~~~~~~~~~~

@@ -11,11 +11,27 @@ protected:
 	float fireRate, lastShotTime;
 	wType type;
 	ofImage* img;
-	//vector <Bullet> bullets;
+	glm::vec3* pos;
+	vector <Bullet> bullets;
 public:
 	Weapon();
 	bool shouldShoot();
-	void shoot();
+	virtual void shoot();
 	void update();
 	void setWeapon(wType type);
+	void setPos(glm::vec3* position);
+
+	glm::vec3 heading;
+};
+
+class Sml_Cannon: public Weapon
+{
+public:
+	Sml_Cannon();
+	void shoot();
+};
+
+class Lrg_Cannon : public Weapon
+{
+
 };

@@ -14,6 +14,7 @@ protected:
 public:
 	Bullet();
 	void setup(glm::vec3 position,  ofImage* bullet_image);
+	void setup(glm::vec3* pposition,  ofImage* bullet_image);
 	void draw();
 	glm::vec3 getPos();
 	float getWidth();

@@ -13,13 +13,19 @@ void ofApp::setup(){
 	shapeDegRot = 45;
 	shapeSize = 40;
 
+	//bullets
+	//gBullet.load("greenCannon.png");
+	gBull.load("greenCannon.png");
+	b.setup(center, &gBull);
+	
+
 	//Hero
 	heroImg.load("Hero_ship.png");
 	hero.setup(&heroImg);
 		//Hero Sliders
 	heroGroup.setName("Hero");
-	heroGroup.add(heroSpeedSlider.set("Hero Speed", 9, 0, 50));
-	heroGroup.add(heroRotationSpeedSlider.set("Hero Rotation Speed", 5, 0, 10));
+	heroGroup.add(heroSpeedSlider.set("Hero Speed", 15, 0, 80));
+	heroGroup.add(heroRotationSpeedSlider.set("Hero Rotation Speed", 5, 0, 20));
 	heroGroup.add(heroSizeSlider.set("Hero Size", 0.75, 0, 3));
 	heroGroup.add(hRetroRSlider.set("RetroRockets",true));
 	gui.setup(heroGroup);
@@ -94,6 +100,7 @@ void ofApp::draw(){
 		gui.draw();
 		hero.draw();
 		lc.drawEnemies();
+		//b.draw();
 		break;
 	case End:
 		break;

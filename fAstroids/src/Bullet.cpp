@@ -4,7 +4,7 @@
 Bullet::Bullet()
 {
     pos = glm::vec3(0, 0,0);
-    vel = pos;
+    heading = pos;
     rotation = 0;
     speed = 10;
 
@@ -25,6 +25,7 @@ void Bullet::setup(glm::vec3* pPosition, ofImage* pBullet_img)
 }
 
 void Bullet::draw() {
+    cout << "drawBullet\n";
     ofPushMatrix();
     ofSetColor(ofColor::white);
     ofMultMatrix(getMatrix());
@@ -61,21 +62,22 @@ glm::mat4 Bullet::getMatrix() {
     return (trans * rot * scale);
 }
 
-void Bullet::setDirection(glm::vec3 mousePos)
+void Bullet::setDirection(glm::vec3 targetPos)
 {
-    vel = pos - mousePos;
-    vel = glm::normalize(vel);
-    rotation = glm::orientedAngle(vel, glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
+    heading = pos - targetPos;
+    heading = glm::normalize(heading);
+    rotation = glm::orientedAngle(heading, glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
     rotation = glm::degrees(rotation);
-    vel *= -speed;
+    heading *= -speed;
 }
 void Bullet::move()
 {
-    pos += vel;
+    pos += heading;
 }
 void Bullet::update()
 {
     move();
+    //rotate?
 }
 
 

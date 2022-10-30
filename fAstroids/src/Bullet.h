@@ -4,7 +4,7 @@
 class Bullet
 {
 protected:
-	glm::vec3 pos,vel;
+	glm::vec3 pos,heading;
 	float speed, rotation, accuracy;
 	float imgWidth,imgHeight;
 	float damage;
@@ -21,7 +21,7 @@ public:
 	float getDamage();
 	void setDamage(float);
 	glm::mat4 getMatrix();
-	void setDirection(glm::vec3 mousePos);
+	void setDirection(glm::vec3 targetPos);
 	void move();
 	void update();
 };

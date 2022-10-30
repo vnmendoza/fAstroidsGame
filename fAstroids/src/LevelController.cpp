@@ -36,7 +36,7 @@ void LevelController::updateEnemies(float lifeSpan, int spd, float fireRate,glm:
 		enemies[i]->setLifespan(lifeSpan);
 		enemies[i]->setSpeed(spd);
 		enemies[i]->setFireRate(fireRate);
-		enemies[i]->move();
+		enemies[i]->update();
 		if (ofGetElapsedTimef() - enemies[i]->getBirthday() > enemies[i]->getLifespan())
 			enemies.erase(enemies.begin() + i);
 	}
@@ -115,6 +115,7 @@ void LevelController::spawnSquare()
 	Square* s = new Square();
 	s->setup(size, 4);
 	s->weapon.setWeapon(sCannon);
+	//s->setBulletImage()
 	enemies.push_back(s);
 
 }

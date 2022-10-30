@@ -320,6 +320,12 @@ void Enemy::setup(int shapeSize, int numSides)
 	rotation = ofRandom(0, 360);
 	pos = glm::vec3(ofRandom(width, ofGetWindowWidth() - width), ofRandom(width, ofGetWindowHeight() - width), 0);
 }
+void Enemy::update()
+{
+	//cout << "enemyUdate\n";
+	move();
+	weapon.update(heroPos);
+}
 void Enemy::move()
 {
 	cout << "from Enemy\n";
@@ -329,10 +335,13 @@ void Enemy::draw()
 
 	ofPushMatrix();
 	ofMultMatrix(getMatrix());
+	weapon.draw();
 	ofSetCircleResolution(sides);
 	ofDrawCircle(0,0,width);
 	ofPopMatrix();
 }
+
+
 
 //~~~~~~~~~~~~~~~~~~Triangle~~~~~~~~~~~~~~~~~~~~
 
@@ -384,7 +393,15 @@ Square::Square() {
 	//fireRate = 3;
 	//weapon = 
 	cout << "sqr created\n";
+	weapon = Sml_Cannon();
 	weapon.setPos(&pos);
+
+}
+
+void Square::setBulletImage(ofImage* img)
+{
+	weapon.setImage(img);
+
 }
 
 void Square::move()
@@ -402,6 +419,8 @@ void Square::move()
 	Agent::move();
 
 }
+
+
 
 //~~~~~~~~~~~~~~~Hexagon~~~~~~~~~~~~~
 Hexagon::Hexagon()

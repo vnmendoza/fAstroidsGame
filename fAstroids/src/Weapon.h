@@ -4,6 +4,7 @@
 
 
 enum wType{dne, sCannon, lCannon, homing, mines, razor, muon, particleBeam };
+//ofImage gBullet;
 
 class Weapon
 {
@@ -11,15 +12,20 @@ protected:
 	float fireRate, lastShotTime;
 	wType type;
 	ofImage* img;
+
 	glm::vec3* pos;
+	glm::vec3 targetPos;
 	vector <Bullet> bullets;
 public:
 	Weapon();
 	bool shouldShoot();
-	virtual void shoot();
-	void update();
+	void shoot(glm::vec3 targetPos);
+	void update(glm::vec3 tagetPosition);
 	void setWeapon(wType type);
 	void setPos(glm::vec3* position);
+	void setTargetPos(glm::vec3 targetPosition);
+	void setImage(ofImage* image);
+	void draw();
 
 	glm::vec3 heading;
 };
@@ -28,7 +34,6 @@ class Sml_Cannon: public Weapon
 {
 public:
 	Sml_Cannon();
-	void shoot();
 };
 
 class Lrg_Cannon : public Weapon

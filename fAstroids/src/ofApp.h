@@ -4,6 +4,12 @@
 #include "Agent.h"
 #include "LevelController.h"
 #include "ofxGui.h"
+#include "Bullet.h"
+
+//Questions for teach:
+// is it possible to assign an image outside of ofApp.cpp
+// 1) can i make it so the bullet image is loaded elsewhere?
+// instead of having the program pass it all the way thorugh?
 
 class ofApp : public ofBaseApp {
 
@@ -43,6 +49,10 @@ public:
 	string instructions, enter, gameOver;
 	LevelController lc;
 
+	//Bullets
+	//ofImage gBullet;
+	Bullet b;
+	ofImage gBull;
 
 	ofxPanel gui;
 	ofxLabel label;

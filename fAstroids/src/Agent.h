@@ -2,8 +2,10 @@
 #include "ofMain.h"
 #include "Weapon.h"
 
+
 class Agent
 {
+
 protected:
 	glm::vec3 pos, velocity, acceleration,force;
 	float mass, damping, angularForce, angularVelocity, angularAcceleration;
@@ -79,6 +81,7 @@ public:
 	void setHeroPos(glm::vec3 heroPosition);
 	virtual void draw();
 	void setFireRate(float fr);
+	void drawWeapon();
 };
 
 
@@ -103,7 +106,8 @@ private:
 public:
 	Square();
 	void move();
-	void update();
+	//void update();
+	void setBulletImage(ofImage *image);
 };
 
 class Hexagon : public Enemy

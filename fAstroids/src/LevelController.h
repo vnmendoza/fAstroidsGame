@@ -10,6 +10,7 @@ private:
 	int spawnAmount,size;
 	int level;
 	vector<Enemy*> enemies;
+	vector<Bullet> bullets;
 public:
 	LevelController();
 	bool shouldSpawn();

@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "Weapon.h"
+#include "Bullet.h"
 
 
 class Agent
@@ -16,8 +17,11 @@ protected:
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
+
 public:
-	Weapon weapon;
+	//Weapon weapon;
+	ofImage *bulletImg;
+	bool alive;
 	Agent();
 	int getSpeed();
 	void setSpeed(int);
@@ -39,6 +43,8 @@ public:
 	void setRetroRocket(bool rr);
 	bool getRetroRocket();
 	void setRetroSpeed(float speed);
+	Bullet shoot();
+	Bullet shoot(glm::vec3 targetPos);
 
 };
 
@@ -70,6 +76,8 @@ protected:
 	glm::vec3 direction,heroPos;
 	float lifespan;
 	float birthday;
+	ofImage* bulletImg;
+	float fireRate, lastShotTime;
 
 public:
 	Enemy();
@@ -83,6 +91,7 @@ public:
 	virtual void draw();
 	void setFireRate(float fr);
 	void drawWeapon();
+	bool shouldShoot();
 };
 
 

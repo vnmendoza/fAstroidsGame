@@ -12,6 +12,7 @@ Agent::Agent()
 	angularForce ,angularAcceleration,angularVelocity= 0;
 	velocity, acceleration, force = glm::vec3(0);
 	retroRocket = true;
+	alive = true;
 	cout << "agent created\n";
 }
 
@@ -156,6 +157,23 @@ void Agent::draw()
 	ofPopMatrix();
 }
 
+
+
+Bullet Agent::shoot()
+{
+	return shoot(heading());
+}
+
+Bullet Agent::shoot(glm::vec3 targetPosition)
+{
+	Bullet b;
+	b.setup(pos, bulletImg);
+	b.setDirection(targetPosition);
+	return b;
+}
+
+
+
 // ~~~~~~~~~~~~~~HERO~~~~~~~~~~~~
 Hero::Hero() : Agent()
 {
@@ -291,6 +309,9 @@ Enemy::Enemy() : Agent()
 	lifespan = 5;
 	birthday = ofGetElapsedTimef();
 	cout << "enemy created\n";
+	fireRate = 2;
+	lastShotTime = ofGetElapsedTimef();
+
 }
 
 float Enemy::getBirthday()
@@ -329,7 +350,7 @@ void Enemy::update()
 {
 	//cout << "enemyUdate\n";
 	move();
-	weapon.update(heroPos);
+	//weapon.update(heroPos);
 }
 void Enemy::move()
 {
@@ -337,14 +358,28 @@ void Enemy::move()
 }
 void Enemy::draw()
 {
-
-	ofPushMatrix();
-	ofMultMatrix(getMatrix());
-	weapon.draw();
-	ofSetCircleResolution(sides);
-	ofDrawCircle(0,0,width);
-	ofPopMatrix();
+	//weapon.draw();
+	//if (alive)
+	{
+		ofPushMatrix();
+		ofMultMatrix(getMatrix());
+		ofSetCircleResolution(sides);
+		ofDrawCircle(0, 0, width);
+		ofPopMatrix();
+	}
 }
+
+bool Enemy::shouldShoot()
+{
+	//cout << "shouldShoot\n";
+	if (fireRate < ofGetElapsedTimef() - lastShotTime)
+	{
+		lastShotTime = ofGetElapsedTimef();
+		return true;
+	}
+	return false;
+}
+
 
 
 
@@ -398,14 +433,14 @@ Square::Square() {
 	//fireRate = 3;
 	//weapon = 
 	cout << "sqr created\n";
-	weapon = Sml_Cannon();
-	weapon.setPos(&pos);
+	//weapon = Sml_Cannon();
+//	weapon.setPos(&pos);
 
 }
 
 void Square::setBulletImage(ofImage* img)
 {
-	weapon.setImage(img);
+//	weapon.setImage(img);
 
 }
 

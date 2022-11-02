@@ -23,6 +23,7 @@ void LevelController::update(float spawn_rate, int spawn_amount)
 {
 	spawnRate = spawn_rate;
 	spawnAmount = spawn_amount;
+
 	//if (shouldSpawn())
 		//spawnEnemies();
 }
@@ -39,6 +40,11 @@ void LevelController::updateEnemies(float lifeSpan, int spd, float fireRate,glm:
 		enemies[i]->update();
 		if (ofGetElapsedTimef() - enemies[i]->getBirthday() > enemies[i]->getLifespan())
 			enemies.erase(enemies.begin() + i);
+		//if (enemies[i]->shouldShoot())
+			//bullets.push_back(enemies[i]->shoot());
+			//enemies[i]->alive = false;
+		//if(!enemies[i]->alive && enemies[i]->weapon.bullets.empty())
+			//enemies.erase(enemies.begin() + i);
 	}
 }
 
@@ -106,6 +112,7 @@ void LevelController::spawnTriangle()
 {
 	Triangle* t = new Triangle();
 	t->setup(size, 3);
+	//t->weapon.bullets = &bullets;
 	enemies.push_back(t);
 
 }
@@ -114,7 +121,7 @@ void LevelController::spawnSquare()
 {
 	Square* s = new Square();
 	s->setup(size, 4);
-	s->weapon.setWeapon(sCannon);
+	//s->weapon.setWeapon(sCannon);
 	//s->setBulletImage()
 	enemies.push_back(s);
 
@@ -124,7 +131,7 @@ void LevelController::spawnHexagon()
 {
 	Hexagon* h = new Hexagon();
 	h->setup(size, 6);
-	h->weapon.setWeapon(mines);
+	//h->weapon.setWeapon(mines);
 	enemies.push_back(h);
 }
 void LevelController::drawEnemies()

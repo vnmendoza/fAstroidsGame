@@ -23,6 +23,7 @@ void ofApp::setup(){
 	gBull.load("greenCannon.png");
 	b.setup(center, &gBull);
 	
+	
 
 	//Hero
 	heroImg.load("Hero_ship.png");

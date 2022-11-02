@@ -37,9 +37,7 @@ void Weapon::shoot(glm::vec3 targetPosition)
 	Bullet b;
 	b.setup(pos, img);
 	b.setDirection(targetPosition);
-	bullets.push_back(b);
-
-
+	bullets->push_back(b);
 }
 
 void Weapon::update(glm::vec3 tp)
@@ -47,7 +45,7 @@ void Weapon::update(glm::vec3 tp)
 	if (shouldShoot())
 		shoot(tp);
 	//tell each bullet to update
-	for (Bullet& b : bullets)
+	for (Bullet& b : *bullets)
 		b.update();
 	
 }
@@ -59,7 +57,7 @@ void Weapon::setBullets(vector <Bullet>* blt)
 
 void Weapon::draw()
 {
-	for (Bullet& b : bullets)
+	for (Bullet& b : *bullets)
 		b.draw(); 
 }
 

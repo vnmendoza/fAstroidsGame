@@ -38,6 +38,7 @@ public:
 	void retrograde();
 	void setRetroRocket(bool rr);
 	bool getRetroRocket();
+	void setRetroSpeed(float speed);
 
 };
 

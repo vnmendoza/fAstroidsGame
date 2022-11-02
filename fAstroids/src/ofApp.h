@@ -10,6 +10,12 @@
 // is it possible to assign an image outside of ofApp.cpp
 // 1) can i make it so the bullet image is loaded elsewhere?
 // instead of having the program pass it all the way thorugh?
+// 2) When i create bullets it makes a weapon. When that enemy 
+// diappears so does the bullet.
+// 3) the movement is tied to the enemy movement
+
+//dont actually clear the enemy 
+
 
 class ofApp : public ofBaseApp {
 
@@ -35,6 +41,7 @@ public:
 	void spawnEnemies();
 	void drawElapsedTime();
 	void drawStart();
+	void draw_lives();
 
 	//General
 	enum GameState { Title, Play, End };
@@ -48,11 +55,13 @@ public:
 		instHeight, circum, shapeDegRot, shapeSize;
 	string instructions, enter, gameOver;
 	LevelController lc;
+	ofSoundPlayer shootSound;
 
 	//Bullets
 	//ofImage gBullet;
 	Bullet b;
 	ofImage gBull;
+	vector <Bullet> projectiles;
 
 	ofxPanel gui;
 	ofxLabel label;
@@ -66,7 +75,7 @@ public:
 	ofParameterGroup heroGroup;
 	ofParameter<int> heroSpeedSlider;
 	ofParameter<bool> hRetroRSlider;
-	ofParameter<float> heroRotationSpeedSlider, heroSizeSlider;
+	ofParameter<float> heroRotationSpeedSlider, heroSizeSlider, hRetroRSpeedSlider;
 	ofParameter<int> bulletSpeedSlider;
 
 	//Enemies

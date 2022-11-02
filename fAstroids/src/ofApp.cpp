@@ -13,6 +13,11 @@ void ofApp::setup(){
 	shapeDegRot = 45;
 	shapeSize = 40;
 
+	//sound
+	//shootSound.load("pathToSound.mp4");
+	//shootSound.setLoop(true);
+	
+
 	//bullets
 	//gBullet.load("greenCannon.png");
 	gBull.load("greenCannon.png");
@@ -27,6 +32,7 @@ void ofApp::setup(){
 	heroGroup.add(heroSpeedSlider.set("Hero Speed", 15, 0, 80));
 	heroGroup.add(heroRotationSpeedSlider.set("Hero Rotation Speed", 5, 0, 20));
 	heroGroup.add(heroSizeSlider.set("Hero Size", 0.75, 0, 3));
+	heroGroup.add(hRetroRSpeedSlider.set("Retro Dampners", 0.98, 0.8, 0.999));
 	heroGroup.add(hRetroRSlider.set("RetroRockets",true));
 	gui.setup(heroGroup);
 	//Enemy
@@ -64,6 +70,7 @@ void ofApp::updateFromGui()
 	hero.setRotationSpeed(heroRotationSpeedSlider);
 	hero.setSize(heroSizeSlider);
 	hero.setRetroRocket(hRetroRSlider);
+	hero.setRetroSpeed(hRetroRSpeedSlider);
 	lc.update(eSpawnRate, eSpawnAmnt,levelSlider);
 	lc.updateEnemies(eLifespan,enemySpeedSlider,eFireRate,hero.getPos());
 }
@@ -100,6 +107,7 @@ void ofApp::draw(){
 		gui.draw();
 		hero.draw();
 		lc.drawEnemies();
+		draw_lives();
 		//b.draw();
 		break;
 	case End:
@@ -108,6 +116,7 @@ void ofApp::draw(){
 		break;
 	}
 }
+
 void ofApp::drawStart()
 {
 	//Start Screen
@@ -184,6 +193,16 @@ void ofApp::drawStart()
 	// Add background music
 	// Add Start sound
 
+}
+
+void ofApp::draw_lives() {
+	for (int i = 0; i < hero.getNRG(); i++) {
+		ofPushMatrix();
+		ofSetColor(hero.getColor());
+		heroImg.setAnchorPoint(heroImg.getWidth() / 2, heroImg.getHeight() / 2);
+		heroImg.draw(ofGetWindowWidth() - (i * 100) + 100, 250, 100, 100);
+		ofPopMatrix();
+	}
 }
 
 //--------------------------------------------------------------

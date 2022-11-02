@@ -58,6 +58,10 @@ bool Agent::getRetroRocket()
 {
 	return retroRocket;
 }
+void Agent::setRetroSpeed(float speed)
+{
+	damping = speed;
+}
 void Agent::setShapeColor(ofColor c)
 {
 	color = c;
@@ -213,6 +217,7 @@ void Hero::setSize(float size)
 	scaler = glm::vec3(size, size, size);
 	imgWidth = sprite->getWidth() * size;
 	imgHeight = sprite->getHeight() * size;
+	width = imgWidth/5;
 }
 
 void Hero::setLeftPressed(bool b)

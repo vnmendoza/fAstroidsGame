@@ -26,6 +26,7 @@ public:
 	void setTargetPos(glm::vec3 targetPosition);
 	void setImage(ofImage* image);
 	void draw();
+	void setBullets(vector <Bullet>* blt);
 
 	glm::vec3 heading;
 };

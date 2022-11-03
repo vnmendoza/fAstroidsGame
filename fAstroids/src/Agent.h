@@ -17,7 +17,6 @@ protected:
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
-
 public:
 	//Weapon weapon;
 	ofImage *bulletImg;
@@ -76,7 +75,6 @@ protected:
 	glm::vec3 direction,heroPos;
 	float lifespan;
 	float birthday;
-	ofImage* bulletImg;
 	float fireRate, lastShotTime;
 
 public:
@@ -91,7 +89,7 @@ public:
 	virtual void draw();
 	void setFireRate(float fr);
 	void drawWeapon();
-	bool shouldShoot();
+	virtual bool shouldShoot();
 };
 
 
@@ -105,6 +103,7 @@ public:
 	void update(glm::vec3 heroPosition);
 	void draw();
 	void drawHeading();
+	bool shouldShoot();
 	//glm::vec3 heading();
 };
 

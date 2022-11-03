@@ -23,6 +23,9 @@ void ofApp::setup(){
 	gBull.load("greenCannon.png");
 	b.setup(center, &gBull);
 	
+	//LevelController
+	lc.gBullImg = &gBull;
+	cout << "lc" << lc.gBullImg->getWidth() << endl;
 	
 
 	//Hero
@@ -87,6 +90,7 @@ void ofApp::update(){
 		updateFromGui();
 		hero.update();
 		//LevelController
+		lc.updateBullets();
 		break;
 	case End:
 		break;
@@ -108,8 +112,9 @@ void ofApp::draw(){
 		gui.draw();
 		hero.draw();
 		lc.drawEnemies();
+		lc.drawBullets();
 		draw_lives();
-		//b.draw();
+		b.draw();
 		break;
 	case End:
 		break;

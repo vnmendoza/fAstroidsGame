@@ -27,9 +27,9 @@ void Bullet::setup(glm::vec3* pPosition, ofImage* pBullet_img)
 void Bullet::draw() {
     ofPushMatrix();
     ofSetColor(ofColor::white);
-    //ofMultMatrix(glm::inverse(getMatrix()));
+    ofMultMatrix(getMatrix());
     img->setAnchorPoint(imgWidth / 2, imgHeight / 2);
-    img->draw(0, pos.y, imgWidth, imgHeight);
+    img->draw(0,0, imgWidth, imgHeight);
     ofPopMatrix();
 
 }

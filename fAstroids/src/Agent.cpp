@@ -1,5 +1,6 @@
 #include "Agent.h"
 
+ofImage gBullet;
 
 Agent::Agent()
 {
@@ -161,12 +162,18 @@ void Agent::draw()
 
 Bullet Agent::shoot()
 {
+	//TODO: its shooting at the untranslated heading
+	cout << "Heading: " << heading();
+	ofPushMatrix();
+	ofMultMatrix(getMatrix());
 	return shoot(heading());
+	ofPopMatrix();
 }
 
 Bullet Agent::shoot(glm::vec3 targetPosition)
 {
 	Bullet b;
+	//cout<<"agent shoot: " << bulletImg->getWidth() << endl;
 	b.setup(pos, bulletImg);
 	b.setDirection(targetPosition);
 	return b;
@@ -371,7 +378,8 @@ void Enemy::draw()
 
 bool Enemy::shouldShoot()
 {
-	//cout << "shouldShoot\n";
+	//cout << "Enemy shouldShoot\n";
+
 	if (fireRate < ofGetElapsedTimef() - lastShotTime)
 	{
 		lastShotTime = ofGetElapsedTimef();
@@ -383,6 +391,7 @@ bool Enemy::shouldShoot()
 
 
 
+
 //~~~~~~~~~~~~~~~~~~Triangle~~~~~~~~~~~~~~~~~~~~
 
 Triangle::Triangle() : Enemy()
@@ -390,7 +399,7 @@ Triangle::Triangle() : Enemy()
 	sides = 3;
 	angularAcceleration, angularVelocity, angularForce = 0;
 	rotation = 0;
-	cout << "triangle created\n";
+	//cout << "triangle created\n";
 }
 
 void Triangle::move()
@@ -423,19 +432,19 @@ void Triangle::drawHeading()
 	Agent::drawHeading();
 	ofPopMatrix();
 }
-
+bool Triangle::shouldShoot()
+{
+	//cout << "tri shouldshoot\n";
+	return false;
+}
 
 
 //~~~~~~~~~~~~~~~~~~~~~Square~~~~~~~~~~~~~~~~~~
 
 Square::Square() {
-	//lastShotTime = ofGetElapsedTimef();
-	//fireRate = 3;
-	//weapon = 
+	fireRate = 1;
+	//gBullet.load("greenCannon.png");
 	cout << "sqr created\n";
-	//weapon = Sml_Cannon();
-//	weapon.setPos(&pos);
-
 }
 
 void Square::setBulletImage(ofImage* img)

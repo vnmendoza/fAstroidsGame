@@ -1,6 +1,6 @@
 #include "Weapon.h"
 
-ofImage gBullet;
+//ofImage gBullet;
 
 Weapon::Weapon()
 {
@@ -71,8 +71,8 @@ void Weapon::setImage(ofImage* image)
 
 Sml_Cannon::Sml_Cannon() : Weapon()
 {
-	gBullet.load("greenCannon.png");
-	img = &gBullet;
+//	gBullet.load("greenCannon.png");
+//	img = &gBullet;
 }
 
 

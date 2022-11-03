@@ -38,11 +38,11 @@ void LevelController::updateEnemies(float lifeSpan, int spd, float fireRate,glm:
 		enemies[i]->setSpeed(spd);
 		enemies[i]->setFireRate(fireRate);
 		enemies[i]->update();
+		if (enemies[i]->shouldShoot())
+			bullets.push_back(enemies[i]->shoot());
 		if (ofGetElapsedTimef() - enemies[i]->getBirthday() > enemies[i]->getLifespan())
 			enemies.erase(enemies.begin() + i);
-		//if (enemies[i]->shouldShoot())
-			//bullets.push_back(enemies[i]->shoot());
-			//enemies[i]->alive = false;
+					//enemies[i]->alive = false;
 		//if(!enemies[i]->alive && enemies[i]->weapon.bullets.empty())
 			//enemies.erase(enemies.begin() + i);
 	}
@@ -112,6 +112,7 @@ void LevelController::spawnTriangle()
 {
 	Triangle* t = new Triangle();
 	t->setup(size, 3);
+	cout << "pushing tri into enemies" << endl;
 	//t->weapon.bullets = &bullets;
 	enemies.push_back(t);
 
@@ -121,6 +122,8 @@ void LevelController::spawnSquare()
 {
 	Square* s = new Square();
 	s->setup(size, 4);
+	s->bulletImg = gBullImg;
+	//cout<< "square: " <<  s->bulletImg->getWidth()<<endl;
 	//s->weapon.setWeapon(sCannon);
 	//s->setBulletImage()
 	enemies.push_back(s);
@@ -131,6 +134,7 @@ void LevelController::spawnHexagon()
 {
 	Hexagon* h = new Hexagon();
 	h->setup(size, 6);
+	h->bulletImg = mineImg;
 	//h->weapon.setWeapon(mines);
 	enemies.push_back(h);
 }
@@ -138,4 +142,16 @@ void LevelController::drawEnemies()
 {
 	for (auto e : enemies)
 		e->draw();
+}
+
+void LevelController::drawBullets()
+{
+	for (Bullet& b : bullets)
+		b.draw();
+}
+
+void LevelController::updateBullets()
+{
+	for (Bullet& b : bullets)
+		b.update();
 }

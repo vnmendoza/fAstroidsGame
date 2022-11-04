@@ -2,6 +2,8 @@
 #include "ofMain.h"
 #include "Weapon.h"
 #include "Bullet.h"
+#include "ParticleEmitter.h"
+#include "Particle.h"
 
 
 class Agent
@@ -11,7 +13,7 @@ protected:
 	glm::vec3 pos, velocity, acceleration,force;
 	float mass, damping, angularForce, angularVelocity, angularAcceleration;
 	bool thrust,retroRocket;
-	int speed, nEnergy;
+	int speed, nEnergy,maxNRG;
 	ofColor color;
 	float width, rotation;
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
@@ -64,6 +66,7 @@ public:
 	void setRightPressed(bool);
 	void loseNRG();
 	int getNRG();
+	void gainNRG();
 	void setNRG(int energy);
 	void move();
 	};
@@ -90,6 +93,7 @@ public:
 	void setFireRate(float fr);
 	void drawWeapon();
 	virtual bool shouldShoot();
+	Bullet shoot(glm::vec3 targetPos);
 };
 
 

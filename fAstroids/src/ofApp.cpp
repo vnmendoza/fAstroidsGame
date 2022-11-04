@@ -16,21 +16,57 @@ void ofApp::setup(){
 	//sound
 	//shootSound.load("pathToSound.mp4");
 	//shootSound.setLoop(true);
+	collideSound.load("sounds/collide.mp3");
+	thrustSound.load("sounds/thruster.mp3");
+	expSound.load("sounds/explosion.mp3");
+	shootSound.load("sounds/shoot.mp3");
+	thrustSound.setLoop(true); //sets loop, set to false for stuff like gun shots
+	thrustSound.setVolume(1.0f);
 	
+	// set up the emitter forces
+	//
+	turbForce = new TurbulenceForce(ofVec3f(-20, -20, -20), ofVec3f(20, 20, 20));
+	gravityForce = new GravityForce(ofVec3f(0, -10, 0));
+	radialForce = new ImpulseRadialForce(1000.0);
+
+
+	radialForce->set(1000, 0);
+
+	emitter.sys->addForce(turbForce);
+	emitter.sys->addForce(gravityForce);
+	emitter.sys->addForce(radialForce);
+
+	orbitalEmitter.sys->addForce(turbForce);
+	orbitalEmitter.sys->addForce(gravityForce);
+	orbitalEmitter.sys->addForce(radialForce);
+
+	emitter.setVelocity(ofVec3f(0, 0, 0));
+	emitter.setOneShot(true);
+	emitter.setEmitterType(RadialEmitter);
+	emitter.setGroupSize(5000);
+
+	orbitalEmitter.setVelocity(ofVec3f(0, 0, 0));
+	orbitalEmitter.setOneShot(true);
+	orbitalEmitter.setEmitterType(RadialEmitter);
+	orbitalEmitter.setGroupSize(5000);
+
 
 	//bullets
 	//gBullet.load("greenCannon.png");
 	gBull.load("greenCannon.png");
-	b.setup(center, &gBull);
+	b.setup(glm::vec3(500,500,0), &gBull);
 	
 	//LevelController
 	lc.gBullImg = &gBull;
-	cout << "lc" << lc.gBullImg->getWidth() << endl;
-	
+	lc.hero = &hero;
+	lc.collideSound = &collideSound;
+	lc.expSound = &expSound;
 
 	//Hero
 	heroImg.load("Hero_ship.png");
 	hero.setup(&heroImg);
+	hBulletImg.load("bullet.png");
+	hBulletImg.setAnchorPoint(hBulletImg.getWidth() / 2, hBulletImg.getHeight() / 2);
 		//Hero Sliders
 	heroGroup.setName("Hero");
 	heroGroup.add(heroSpeedSlider.set("Hero Speed", 15, 0, 80));
@@ -91,6 +127,15 @@ void ofApp::update(){
 		hero.update();
 		//LevelController
 		lc.updateBullets();
+		lc.collisionCheck();
+		emitter.update();
+		orbitalEmitter.update();
+		if (hero.getNRG() < 1)
+		{
+			endTime = ofGetElapsedTimef();
+			timeAlive = endTime - startTime;
+			gs = End;
+		}
 		break;
 	case End:
 		break;
@@ -103,24 +148,53 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	drawFrameRate();
 	switch (gs)
 	{
 	case Title:
 		drawStart();
 		break;
 	case Play:
-		gui.draw();
+		emitter.draw();
+		orbitalEmitter.draw();
+		drawElapsedTime();
+		if(!bHide) gui.draw();
 		hero.draw();
 		lc.drawEnemies();
 		lc.drawBullets();
+		lc.drawParticles();
 		draw_lives();
-		b.draw();
+		//b.draw();
 		break;
 	case End:
+		my32Font.drawString("Game Over", center.x - gameOverWidth / 2, center.y);
+		endTimeStr = "Time Alive: " + ofToString(timeAlive);
+		fonty.drawString(endTimeStr, center.x - fonty.stringWidth(endTimeStr) / 2, center.y + 40);
+		spaceText = "Press SPACE to return to Main Menu";
+		fonty.drawString(spaceText, center.x - fonty.stringWidth(spaceText) / 2, center.y + 80);
 		break;
 	default:
 		break;
 	}
+}
+
+void ofApp::drawFrameRate()
+{
+	ofPushMatrix();
+	ofSetColor(ofColor::white);
+	string frameRate = "Frame Rate: " + ofToString(ofGetFrameRate());
+	ofDrawBitmapString(frameRate, ofGetWindowWidth() - 200, 100);
+	ofPopMatrix();
+
+}
+
+void ofApp::drawElapsedTime()
+{
+	ofPushMatrix();
+	ofSetColor(ofColor::white);
+	string time = "Time Alive: " + ofToString(ofGetElapsedTimef() - startTime);
+	ofDrawBitmapString(time, ofGetWindowWidth() / 2, 50);
+	ofPopMatrix();
 }
 
 void ofApp::drawStart()
@@ -225,7 +299,11 @@ void ofApp::keyPressed(int key){
 		break;
 	case Play:
 		if (key == OF_KEY_UP || key == 'w')
+		{
 			hero.setUpPressed(true);
+			if(!thrustSound.isPlaying())
+				thrustSound.play();
+		}
 		if (key == OF_KEY_LEFT || key == 'a')
 			hero.setLeftPressed(true);
 		if (key == OF_KEY_DOWN || key == 's')
@@ -234,6 +312,10 @@ void ofApp::keyPressed(int key){
 			hero.setRightPressed(true);
 		if (key == ' ') {
 			cout << "space" << endl;
+			emitter.sys->reset();
+			emitter.start();
+			orbitalEmitter.sys->reset();
+			orbitalEmitter.start();
 		}
 		if (key == 'h' || key == 'H')
 		{
@@ -254,6 +336,7 @@ void ofApp::keyPressed(int key){
 		if (key == ' ')
 		{
 			death = false;
+			lc.restart();
 			hero.setPos(center);
 			hero.setNRG(5);
 			gs = Title;
@@ -269,6 +352,7 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
 
 	if (key == OF_KEY_UP || key == 'w') {
+		thrustSound.stop();
 		hero.setUpPressed(false);
 	}
 	if (key == OF_KEY_LEFT || key == 'a') {
@@ -278,6 +362,7 @@ void ofApp::keyReleased(int key){
 		hero.setDownPressed(false);
 	}
 	if (key == OF_KEY_RIGHT || key == 'd') {
+		thrustSound.stop();
 		hero.setRightPressed(false);
 	}
 	if (key == 'f')
@@ -298,7 +383,20 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	if (button == 0 && gs == Play)
+	{
+		//hero matrix - click matrix to get heading
+		// heading normalized ++
 
+		shootSound.play();
+		//float rot = glm::orientedAngle(,glm::vec3(0,1,0),glm::vec3(0,0,1))
+		Bullet pb; 
+		pb.setup(hero.getPos(), &gBull);
+		pb.setDirection(glm::vec3(x, y, 0));
+		pb.fromPlayer = true;
+		lc.bullets.push_back(pb);
+	}
+	
 }
 
 //--------------------------------------------------------------

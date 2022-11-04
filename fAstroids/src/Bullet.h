@@ -9,10 +9,11 @@ protected:
 	float imgWidth,imgHeight;
 	float damage;
 	ofImage* img;
-	bool fromPlayer;
+	ofColor color;
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 public:
 	Bullet();
+	bool fromPlayer;
 	void setup(glm::vec3 position,  ofImage* bullet_image);
 	void setup(glm::vec3* pposition,  ofImage* bullet_image);
 	void draw();
@@ -24,6 +25,7 @@ public:
 	void setDirection(glm::vec3 targetPos);
 	void move();
 	void update();
+	void setColor(ofColor c);
 };
 
 class CannonBullet : public Bullet

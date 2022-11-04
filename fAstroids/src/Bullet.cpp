@@ -7,7 +7,8 @@ Bullet::Bullet()
     heading = pos;
     rotation = 0;
     speed = 10;
-
+    fromPlayer = false;
+    color = ofColor::white;
 }
 
 void Bullet::setup(glm::vec3 p, ofImage* bullet_image) {
@@ -26,7 +27,7 @@ void Bullet::setup(glm::vec3* pPosition, ofImage* pBullet_img)
 
 void Bullet::draw() {
     ofPushMatrix();
-    ofSetColor(ofColor::white);
+    ofSetColor(color);
     ofMultMatrix(getMatrix());
     img->setAnchorPoint(imgWidth / 2, imgHeight / 2);
     img->draw(0,0, imgWidth, imgHeight);
@@ -78,6 +79,12 @@ void Bullet::update()
     move();
     //rotate?
 }
+
+void Bullet::setColor(ofColor c)
+{
+    color = c;
+}
+
 
 
 

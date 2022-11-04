@@ -1,6 +1,5 @@
 #include "Agent.h"
 
-ofImage gBullet;
 
 Agent::Agent()
 {
@@ -15,7 +14,8 @@ Agent::Agent()
 	retroRocket = true;
 	alive = true;
 	cout << "agent created\n";
-}
+
+	}
 
 void Agent::update()
 {
@@ -154,7 +154,7 @@ void Agent::draw()
 	ofMultMatrix(getMatrix());
 	sprite->setAnchorPoint(imgWidth / 2, imgHeight / 2);
 	sprite->draw(0, 0, imgWidth, imgHeight);
-	drawHeading();
+	//drawHeading();
 	ofPopMatrix();
 }
 
@@ -165,8 +165,12 @@ Bullet Agent::shoot()
 	//TODO: its shooting at the untranslated heading
 	cout << "Heading: " << heading();
 	ofPushMatrix();
-	ofMultMatrix(getMatrix());
-	return shoot(heading());
+	//ofMultMatrix(getMatrix());
+	//ofMultMatrix(getMatrix());
+	glm::vec3 headin = translate(heading());
+	
+	cout << getMatrix() << endl;
+	return shoot(headin);
 	ofPopMatrix();
 }
 
@@ -194,6 +198,7 @@ Hero::Hero() : Agent()
 	is_left_pressed = false;
 	is_down_pressed = false;
 	is_right_pressed = false;
+	maxNRG = 5;
 }
 
 
@@ -270,6 +275,12 @@ void Hero::loseNRG()
 	nEnergy--;
 }
 
+void Hero::gainNRG()
+{
+	if(nEnergy < maxNRG)
+		nEnergy++;
+}
+
 int Hero::getNRG()
 {
 	return nEnergy;
@@ -343,7 +354,7 @@ void Enemy::setLifespan(float lspn)
 
 void Enemy::setFireRate(float fr)
 {
-	//TODO: Create firerate that goes to weapon
+	fireRate = fr;
 }
 
 void Enemy::setup(int shapeSize, int numSides)
@@ -386,6 +397,14 @@ bool Enemy::shouldShoot()
 		return true;
 	}
 	return false;
+}
+
+Bullet Enemy::shoot(glm::vec3 targetPosition)
+{
+	Bullet b = Agent::shoot(targetPosition);
+	b.setColor(ofColor::indigo);
+	return b;
+	
 }
 
 
@@ -442,7 +461,7 @@ bool Triangle::shouldShoot()
 //~~~~~~~~~~~~~~~~~~~~~Square~~~~~~~~~~~~~~~~~~
 
 Square::Square() {
-	fireRate = 1;
+	fireRate = 3;
 	//gBullet.load("greenCannon.png");
 	cout << "sqr created\n";
 }

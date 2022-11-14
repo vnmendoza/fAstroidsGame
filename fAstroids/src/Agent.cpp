@@ -12,8 +12,10 @@ Agent::Agent()
 	angularForce ,angularAcceleration,angularVelocity= 0;
 	velocity, acceleration, force = glm::vec3(0);
 	retroRocket = true;
+	alive = true;
 	cout << "agent created\n";
-}
+
+	}
 
 void Agent::update()
 {
@@ -152,9 +154,36 @@ void Agent::draw()
 	ofMultMatrix(getMatrix());
 	sprite->setAnchorPoint(imgWidth / 2, imgHeight / 2);
 	sprite->draw(0, 0, imgWidth, imgHeight);
-	drawHeading();
+	//drawHeading();
 	ofPopMatrix();
 }
+
+
+
+Bullet Agent::shoot()
+{
+	//TODO: its shooting at the untranslated heading
+	cout << "Heading: " << heading();
+	ofPushMatrix();
+	//ofMultMatrix(getMatrix());
+	//ofMultMatrix(getMatrix());
+	glm::vec3 headin = translate(heading());
+	
+	cout << getMatrix() << endl;
+	return shoot(headin);
+	ofPopMatrix();
+}
+
+Bullet Agent::shoot(glm::vec3 targetPosition)
+{
+	Bullet b;
+	//cout<<"agent shoot: " << bulletImg->getWidth() << endl;
+	b.setup(pos, bulletImg);
+	b.setDirection(targetPosition);
+	return b;
+}
+
+
 
 // ~~~~~~~~~~~~~~HERO~~~~~~~~~~~~
 Hero::Hero() : Agent()
@@ -169,6 +198,7 @@ Hero::Hero() : Agent()
 	is_left_pressed = false;
 	is_down_pressed = false;
 	is_right_pressed = false;
+	maxNRG = 5;
 }
 
 
@@ -245,6 +275,12 @@ void Hero::loseNRG()
 	nEnergy--;
 }
 
+void Hero::gainNRG()
+{
+	if(nEnergy < maxNRG)
+		nEnergy++;
+}
+
 int Hero::getNRG()
 {
 	return nEnergy;
@@ -291,6 +327,9 @@ Enemy::Enemy() : Agent()
 	lifespan = 5;
 	birthday = ofGetElapsedTimef();
 	cout << "enemy created\n";
+	fireRate = 2;
+	lastShotTime = ofGetElapsedTimef();
+
 }
 
 float Enemy::getBirthday()
@@ -315,7 +354,7 @@ void Enemy::setLifespan(float lspn)
 
 void Enemy::setFireRate(float fr)
 {
-	//TODO: Create firerate that goes to weapon
+	fireRate = fr;
 }
 
 void Enemy::setup(int shapeSize, int numSides)
@@ -329,7 +368,7 @@ void Enemy::update()
 {
 	//cout << "enemyUdate\n";
 	move();
-	weapon.update(heroPos);
+	//weapon.update(heroPos);
 }
 void Enemy::move()
 {
@@ -337,14 +376,38 @@ void Enemy::move()
 }
 void Enemy::draw()
 {
-
-	ofPushMatrix();
-	ofMultMatrix(getMatrix());
-	weapon.draw();
-	ofSetCircleResolution(sides);
-	ofDrawCircle(0,0,width);
-	ofPopMatrix();
+	//weapon.draw();
+	//if (alive)
+	{
+		ofPushMatrix();
+		ofMultMatrix(getMatrix());
+		ofSetCircleResolution(sides);
+		ofDrawCircle(0, 0, width);
+		ofPopMatrix();
+	}
 }
+
+bool Enemy::shouldShoot()
+{
+	//cout << "Enemy shouldShoot\n";
+
+	if (fireRate < ofGetElapsedTimef() - lastShotTime)
+	{
+		lastShotTime = ofGetElapsedTimef();
+		return true;
+	}
+	return false;
+}
+
+Bullet Enemy::shoot(glm::vec3 targetPosition)
+{
+	Bullet b = Agent::shoot(targetPosition);
+	b.setColor(ofColor::indigo);
+	return b;
+	
+}
+
+
 
 
 
@@ -355,7 +418,7 @@ Triangle::Triangle() : Enemy()
 	sides = 3;
 	angularAcceleration, angularVelocity, angularForce = 0;
 	rotation = 0;
-	cout << "triangle created\n";
+	//cout << "triangle created\n";
 }
 
 void Triangle::move()
@@ -388,24 +451,24 @@ void Triangle::drawHeading()
 	Agent::drawHeading();
 	ofPopMatrix();
 }
-
+bool Triangle::shouldShoot()
+{
+	//cout << "tri shouldshoot\n";
+	return false;
+}
 
 
 //~~~~~~~~~~~~~~~~~~~~~Square~~~~~~~~~~~~~~~~~~
 
 Square::Square() {
-	//lastShotTime = ofGetElapsedTimef();
-	//fireRate = 3;
-	//weapon = 
+	fireRate = 3;
+	//gBullet.load("greenCannon.png");
 	cout << "sqr created\n";
-	weapon = Sml_Cannon();
-	weapon.setPos(&pos);
-
 }
 
 void Square::setBulletImage(ofImage* img)
 {
-	weapon.setImage(img);
+//	weapon.setImage(img);
 
 }
 

@@ -15,9 +15,9 @@ protected:
 
 	glm::vec3* pos;
 	glm::vec3 targetPos;
-	vector <Bullet> bullets;
 public:
 	Weapon();
+	vector <Bullet>* bullets;
 	bool shouldShoot();
 	void shoot(glm::vec3 targetPos);
 	void update(glm::vec3 tagetPosition);

@@ -1,6 +1,9 @@
 #pragma once
 #include "ofMain.h"
 #include "Weapon.h"
+#include "Bullet.h"
+#include "ParticleEmitter.h"
+#include "Particle.h"
 
 
 class Agent
@@ -10,14 +13,16 @@ protected:
 	glm::vec3 pos, velocity, acceleration,force;
 	float mass, damping, angularForce, angularVelocity, angularAcceleration;
 	bool thrust,retroRocket;
-	int speed, nEnergy;
+	int speed, nEnergy,maxNRG;
 	ofColor color;
 	float width, rotation;
 	glm::vec3 scaler = glm::vec3(1.0, 1.0, 1.0);
 	ofImage* sprite;
 	float imgWidth, imgHeight;
 public:
-	Weapon weapon;
+	//Weapon weapon;
+	ofImage *bulletImg;
+	bool alive;
 	Agent();
 	int getSpeed();
 	void setSpeed(int);
@@ -39,6 +44,8 @@ public:
 	void setRetroRocket(bool rr);
 	bool getRetroRocket();
 	void setRetroSpeed(float speed);
+	Bullet shoot();
+	Bullet shoot(glm::vec3 targetPos);
 
 };
 
@@ -59,6 +66,7 @@ public:
 	void setRightPressed(bool);
 	void loseNRG();
 	int getNRG();
+	void gainNRG();
 	void setNRG(int energy);
 	void move();
 	};
@@ -70,6 +78,7 @@ protected:
 	glm::vec3 direction,heroPos;
 	float lifespan;
 	float birthday;
+	float fireRate, lastShotTime;
 
 public:
 	Enemy();
@@ -83,6 +92,8 @@ public:
 	virtual void draw();
 	void setFireRate(float fr);
 	void drawWeapon();
+	virtual bool shouldShoot();
+	Bullet shoot(glm::vec3 targetPos);
 };
 
 
@@ -96,6 +107,7 @@ public:
 	void update(glm::vec3 heroPosition);
 	void draw();
 	void drawHeading();
+	bool shouldShoot();
 	//glm::vec3 heading();
 };
 

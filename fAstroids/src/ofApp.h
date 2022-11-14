@@ -5,6 +5,8 @@
 #include "LevelController.h"
 #include "ofxGui.h"
 #include "Bullet.h"
+#include "Particle.h"
+#include "ParticleEmitter.h"
 
 //Questions for teach:
 // is it possible to assign an image outside of ofApp.cpp
@@ -40,6 +42,7 @@ public:
 	void updateFromGui();
 	void spawnEnemies();
 	void drawElapsedTime();
+	void drawFrameRate();
 	void drawStart();
 	void draw_lives();
 
@@ -47,21 +50,28 @@ public:
 	enum GameState { Title, Play, End };
 	GameState gs;
 	ofImage bgImg;
-	float startTime;
+	float startTime,endTime;
 	bool bHide, death = false;
 	glm::vec3 center;
 	ofTrueTypeFont myFont, my32Font, fonty;
 	int rotation, enterWidth, instWidth, gameOverWidth,
 		instHeight, circum, shapeDegRot, shapeSize;
-	string instructions, enter, gameOver;
+	string instructions, enter, gameOver,endTimeStr,spaceText;
 	LevelController lc;
-	ofSoundPlayer shootSound;
+	ofSoundPlayer collideSound,thrustSound, expSound,shootSound;
+
+	ParticleEmitter emitter, orbitalEmitter;
+	// adding forces
+		//
+	TurbulenceForce* turbForce;
+	GravityForce* gravityForce;
+	ImpulseRadialForce* radialForce;
 
 	//Bullets
 	//ofImage gBullet;
 	Bullet b;
 	ofImage gBull;
-	vector <Bullet> projectiles;
+	//vector <Bullet> projectiles;
 
 	ofxPanel gui;
 	ofxLabel label;
